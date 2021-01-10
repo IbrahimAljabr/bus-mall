@@ -1,0 +1,22 @@
+.imgs{
+    text-align: center;
+    margin: 40px;
+}
+img{
+    width: 280px;
+    height: 320px;
+    margin: 30px;
+    border-style: solid;
+    border-color: gray;
+}
+button{
+    padding: 15px;
+    margin-left: 15%;
+    background-color: #121212;
+    color: white;
+}
+ul,li{
+    background-color: darkgray;
+    padding: 3px;
+    margin: 20px;
+}
