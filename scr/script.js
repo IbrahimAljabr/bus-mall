@@ -7,15 +7,19 @@ var leftImg = document.getElementById("leftimg");
 var middleImg = document.getElementById("middleimg");
 var rightImg = document.getElementById("rightimg");
 
-var call=document.getElementById("allImges");
-var btn =document.getElementById("btnShow");
+var call = document.getElementById("allImges");
+var btn = document.getElementById("btnShow");
+var btnCanvas = document.getElementById("btnShowCanvas")
+
+var imageCanvas = document.getElementById("canvasId");
 
 var trialsleft = 25;
 
+var shownImgs = [];
 
 var ul;
 var li;
-var divUl=document.getElementById("ul");
+var divUl = document.getElementById("ul");
 
 function Imgs(name, img) {
     this.image = img;
@@ -25,6 +29,39 @@ function Imgs(name, img) {
     this.imgsShow = 0;
 
     arrOfImgs.push(this);
+}
+
+function renderChart() {
+
+    var arrName = [];
+    var arrCount = [];
+    var arrShown = [];
+
+
+    for (var index = 0; index < arrOfImgs.length; index++) {
+
+        arrName.push(arrOfImgs[index].name);
+        arrCount.push(arrOfImgs[index].counter);
+        arrShown.push(arrOfImgs[index].imgsShow);
+
+    }
+
+
+    var chart = new Chart(imageCanvas, {
+        type: 'bar',
+        data: {
+            labels: arrName,
+            datasets: [
+                {
+                    label: 'Images Name ',
+                    data: arrCount,
+                    backgroundColor: "fillPattern"
+                }
+            ]
+        },
+
+    });
+
 }
 
 function renderImgs(leftImgRender, middleImgRender, rightImgRender) {
@@ -38,28 +75,38 @@ function renderImgs(leftImgRender, middleImgRender, rightImgRender) {
     arrOfImgs[rightImgRender].imgsShow++;
 }
 
+function sameName(newName) {
+
+    for (var index = 0; index < shownImgs.length; index++) {
+        if (shownImgs[index].name === newName) {
+            return true
+        }
+
+    }
+    return false
+}
+
 function pickAnImg() {
-    var lImgs = Math.round(Math.random() * (arrOfImgs.length - 1));
-    
 
-
-
-    // while (lImgs === mImgs || lImgs === rImgs) {
-    //     mImgs = Math.round(Math.random() * (arrOfImgs.length - 1));
-    //     rImgs = Math.round(Math.random() * (arrOfImgs.length - 1));
-
-    //     while (mImgs === rImgs || rImgs === lImgs) {
-    //         rImgs = Math.round(Math.random() * (arrOfImgs.length - 1));
-
-    //     }
-    // }
 
     do {
+        var lImgs = Math.round(Math.random() * (arrOfImgs.length - 1));
+        var lImgName = arrOfImgs[lImgs].name;
+    } while (sameName(lImgName));
 
+
+    do {
         var mImgs = Math.round(Math.random() * (arrOfImgs.length - 1));
+        var mImgName = arrOfImgs[mImgs].name;
         var rImgs = Math.round(Math.random() * (arrOfImgs.length - 1));
-        
-    } while (lImgs === mImgs || lImgs === rImgs || mImgs === rImgs);
+        var rImgName = arrOfImgs[rImgs].name;
+
+    } while (lImgs === mImgs || lImgs === rImgs || mImgs === rImgs || sameName(mImgName) || sameName(rImgName));
+
+
+    shownImgs = [];
+
+    shownImgs.push(arrOfImgs[lImgs], arrOfImgs[mImgs], arrOfImgs[rImgs])
 
     renderImgs(lImgs, mImgs, rImgs)
 
@@ -68,30 +115,33 @@ function pickAnImg() {
 
 function checkImges(objectIndicator) {
     for (var index = 0; index < arrOfImgs.length; index++) {
-      if (arrOfImgs[index].url === objectIndicator) {
-        arrOfImgs[index].counter++;
-        trialsleft--;
-      }
+        if (arrOfImgs[index].url === objectIndicator) {
+            arrOfImgs[index].counter++;
+            trialsleft--;
+        }
     }
-  }
+}
 
-function countImgs(event){
+function countImgs(event) {
 
-    var targetId=event.target.id;
-    console.log(targetId);
+    var targetId = event.target.id;
 
     if (trialsleft != 0) {
 
-        if (targetId === 'leftimg' || targetId === 'middleimg' ||targetId==='rightimg') { 
+        if (targetId === 'leftimg' || targetId === 'middleimg' || targetId === 'rightimg') {
             var objectIndicator = event.target.getAttribute('src');
             checkImges(objectIndicator);
             pickAnImg();
-        
-    }else{
-        call.removeEventListener('click',countImgs);
 
+        } else {
+            call.removeEventListener('click', countImgs);
+
+
+        }
     }
-}
+    else {
+        myFunction();
+    }
 }
 
 new Imgs("bag", "bag.jpg");
@@ -115,24 +165,30 @@ new Imgs("usb", "usb.gif");
 new Imgs("water-can", "water-can.jpg");
 new Imgs("wine-glass", "wine-glass.jpg");
 
-console.log(arrOfImgs[5].counter);
 
-function showResult(){
+function showResult() {
 
-    divUl.innerHTML="";
+    divUl.innerHTML = "";
 
     for (let index = 0; index < arrOfImgs.length; index++) {
-        
+
         li = document.createElement('li');
-        li.textContent ="you have picked the "+arrOfImgs[index].name+" "+arrOfImgs[index].counter+" time/s and you have seen it "+arrOfImgs[index].imgsShow+" time/s";
+        li.textContent = "you have picked the " + arrOfImgs[index].name + " " + arrOfImgs[index].counter + " time/s and you have seen it " + arrOfImgs[index].imgsShow + " time/s";
         divUl.appendChild(li);
     }
-    
+
 }
 
+function myFunction() {
+    btn.style.display = "block";
+    btnCanvas.style.display = "block";
+  }
+
 pickAnImg();
-call.addEventListener('click',countImgs);
-btn.addEventListener('click',showResult)
+call.addEventListener('click', countImgs);
+btn.addEventListener('click', showResult);
+btnCanvas.addEventListener('click', renderChart);
+
 
 
 

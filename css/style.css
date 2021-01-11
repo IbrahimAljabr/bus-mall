@@ -14,9 +14,16 @@ button{
     margin-left: 15%;
     background-color: #121212;
     color: white;
+    display: none;
 }
 ul,li{
     background-color: darkgray;
     padding: 3px;
     margin: 20px;
 }
+.canvasdiv{
+    width: 65%;
+    height: 300px;
+    margin: 50px 20% 50px 20%;
+}
+
