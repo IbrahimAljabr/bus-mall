@@ -8,7 +8,7 @@ var arrName = [];
 var arrCount = [];
 var arrShown = [];
 
-var trialsleft = 5;
+var trialsleft = 25;
 var ul;
 var li;
 
