@@ -2,26 +2,29 @@
 
 
 var arrOfImgs = [];
+var shownImgs = [];
+var arrayOfStorage = [];
+var arrName = [];
+var arrCount = [];
+var arrShown = [];
+
+var trialsleft = 5;
+var ul;
+var li;
 
 var leftImg = document.getElementById("leftimg");
 var middleImg = document.getElementById("middleimg");
 var rightImg = document.getElementById("rightimg");
-
 var call = document.getElementById("allImges");
 var btn = document.getElementById("btnShow");
 var btnCanvas = document.getElementById("btnShowCanvas")
-
 var imageCanvas = document.getElementById("canvasId");
-
-var trialsleft = 25;
-
-var shownImgs = [];
-
-var ul;
-var li;
 var divUl = document.getElementById("ul");
 
+
+
 function Imgs(name, img) {
+
     this.image = img;
     this.name = name;
     this.url = 'image/' + img;
@@ -29,13 +32,30 @@ function Imgs(name, img) {
     this.imgsShow = 0;
 
     arrOfImgs.push(this);
+
+
+}
+
+
+function localDataSet() {
+
+    localStorage.setItem('imgData', JSON.stringify(arrOfImgs));
+}
+
+console.log(localStorage);
+
+function checkIfEmtpy() {
+
+    if (localStorage.length > 0) {
+        arrOfImgs = JSON.parse(localStorage.getItem('imgData'));
+    }
 }
 
 function renderChart() {
 
-    var arrName = [];
-    var arrCount = [];
-    var arrShown = [];
+    arrName = [];
+    arrCount = [];
+    arrShown = [];
 
 
     for (var index = 0; index < arrOfImgs.length; index++) {
@@ -45,20 +65,27 @@ function renderChart() {
         arrShown.push(arrOfImgs[index].imgsShow);
 
     }
-
+    localDataSet();
 
     var chart = new Chart(imageCanvas, {
         type: 'bar',
         data: {
-            labels: arrName,
-            datasets: [
-                {
-                    label: 'Images Name ',
-                    data: arrCount,
-                    backgroundColor: "fillPattern"
-                }
-            ]
+          labels: arrName,
+          datasets: [
+            {
+            label: 'of Images Clicks',
+            data: arrCount,
+            backgroundColor: ["gray","gray","gray","gray","gray","gray","gray","gray","gray","gray",
+            "gray","gray","gray","gray","gray","gray","gray","gray","gray","gray",]
+          },
+          {
+            label: 'Time shown for the Images',
+            data: arrShown,
+            backgroundColor: ["black","black","black","black","black","black","black","black","black",
+            "black","black","black","black","black","black","black","black","black","black","black",],
+          }]
         },
+        
 
     });
 
@@ -73,6 +100,7 @@ function renderImgs(leftImgRender, middleImgRender, rightImgRender) {
     arrOfImgs[leftImgRender].imgsShow++;
     arrOfImgs[middleImgRender].imgsShow++;
     arrOfImgs[rightImgRender].imgsShow++;
+    
 }
 
 function sameName(newName) {
@@ -104,6 +132,7 @@ function pickAnImg() {
     } while (lImgs === mImgs || lImgs === rImgs || mImgs === rImgs || sameName(mImgName) || sameName(rImgName));
 
 
+ 
     shownImgs = [];
 
     shownImgs.push(arrOfImgs[lImgs], arrOfImgs[mImgs], arrOfImgs[rImgs])
@@ -124,6 +153,8 @@ function checkImges(objectIndicator) {
 
 function countImgs(event) {
 
+
+
     var targetId = event.target.id;
 
     if (trialsleft != 0) {
@@ -133,6 +164,7 @@ function countImgs(event) {
             checkImges(objectIndicator);
             pickAnImg();
 
+           
         } else {
             call.removeEventListener('click', countImgs);
 
@@ -140,9 +172,29 @@ function countImgs(event) {
         }
     }
     else {
-        myFunction();
+        displayButton();
     }
+
 }
+
+function showResult() {
+
+    divUl.innerHTML = "";
+
+    for (let index = 0; index < arrOfImgs.length; index++) {
+
+        li = document.createElement('li');
+        li.textContent = "you have picked the " + arrOfImgs[index].name + " " + arrOfImgs[index].counter + " time/s and you have seen it " + arrOfImgs[index].imgsShow + " time/s";
+        divUl.appendChild(li);
+    }
+
+}
+
+function displayButton() {
+    btn.style.display = "block";
+    btnCanvas.style.display = "block";
+}
+
 
 new Imgs("bag", "bag.jpg");
 new Imgs("banana", "banana.jpg");
@@ -166,28 +218,12 @@ new Imgs("water-can", "water-can.jpg");
 new Imgs("wine-glass", "wine-glass.jpg");
 
 
-function showResult() {
-
-    divUl.innerHTML = "";
-
-    for (let index = 0; index < arrOfImgs.length; index++) {
-
-        li = document.createElement('li');
-        li.textContent = "you have picked the " + arrOfImgs[index].name + " " + arrOfImgs[index].counter + " time/s and you have seen it " + arrOfImgs[index].imgsShow + " time/s";
-        divUl.appendChild(li);
-    }
-
-}
-
-function myFunction() {
-    btn.style.display = "block";
-    btnCanvas.style.display = "block";
-  }
-
+checkIfEmtpy();
 pickAnImg();
 call.addEventListener('click', countImgs);
 btn.addEventListener('click', showResult);
 btnCanvas.addEventListener('click', renderChart);
+
 
 
 
