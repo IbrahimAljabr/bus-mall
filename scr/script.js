@@ -22,7 +22,7 @@ var imageCanvas = document.getElementById("canvasId");
 var divUl = document.getElementById("ul");
 
 
-
+// the image constructor
 function Imgs(name, img) {
 
     this.image = img;
@@ -35,22 +35,19 @@ function Imgs(name, img) {
 
 
 }
-
-
+//to set the date to the local storage 
 function localDataSet() {
 
     localStorage.setItem('imgData', JSON.stringify(arrOfImgs));
 }
-
-console.log(localStorage);
-
+// check if empty and set the date to the image array 
 function checkIfEmtpy() {
 
     if (localStorage.length > 0) {
         arrOfImgs = JSON.parse(localStorage.getItem('imgData'));
     }
 }
-
+// print the chart in the html page
 function renderChart() {
 
     arrName = [];
@@ -90,7 +87,7 @@ function renderChart() {
     });
 
 }
-
+// print the image in the html page 
 function renderImgs(leftImgRender, middleImgRender, rightImgRender) {
 
     leftImg.setAttribute('src', arrOfImgs[leftImgRender].url);
@@ -102,7 +99,7 @@ function renderImgs(leftImgRender, middleImgRender, rightImgRender) {
     arrOfImgs[rightImgRender].imgsShow++;
     
 }
-
+//pick a unique  image with a name 
 function sameName(newName) {
 
     for (var index = 0; index < shownImgs.length; index++) {
@@ -113,7 +110,7 @@ function sameName(newName) {
     }
     return false
 }
-
+//pick a unique image
 function pickAnImg() {
 
 
@@ -141,7 +138,7 @@ function pickAnImg() {
 
 
 }
-
+// to count images
 function checkImges(objectIndicator) {
     for (var index = 0; index < arrOfImgs.length; index++) {
         if (arrOfImgs[index].url === objectIndicator) {
@@ -150,10 +147,8 @@ function checkImges(objectIndicator) {
         }
     }
 }
-
+// to check the image you tap
 function countImgs(event) {
-
-
 
     var targetId = event.target.id;
 
@@ -167,8 +162,6 @@ function countImgs(event) {
            
         } else {
             call.removeEventListener('click', countImgs);
-
-
         }
     }
     else {
@@ -176,7 +169,7 @@ function countImgs(event) {
     }
 
 }
-
+// print the result on the html page 
 function showResult() {
 
     divUl.innerHTML = "";
@@ -189,7 +182,7 @@ function showResult() {
     }
 
 }
-
+// show and hide the button
 function displayButton() {
     btn.style.display = "block";
     btnCanvas.style.display = "block";
